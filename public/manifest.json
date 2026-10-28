@@ -1,0 +1,9 @@
+{
+  "name": "Planti-dex",
+  "short_name": "Planti-dex",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ec",
+  "theme_color": "#1f3a26",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

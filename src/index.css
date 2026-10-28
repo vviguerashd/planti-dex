@@ -1,0 +1,8 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: #f6f4ec; color: #1c241e; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-text-size-adjust: 100%; }
+img.pixel { image-rendering: pixelated; image-rendering: crisp-edges; }
+:focus-visible { outline: 3px solid #1d5fd1; outline-offset: 2px; }
+button { font: inherit; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
