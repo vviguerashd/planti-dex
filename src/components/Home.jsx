@@ -4,7 +4,7 @@ import { t } from '../lib/theme'
 
 const URGENCY = { sedienta: 0, enferma: 1, con_sed: 2, sin_registro: 3, feliz: 4 }
 
-export default function Home({ plants, logs, onOpen }) {
+export default function Home({ plants, logs, onOpen, onOpenZone }) {
   const items = plants.map(p => ({ plant: p, status: plantStatus(p, logs) }))
   const need = items.filter(i => ['sedienta', 'con_sed', 'enferma'].includes(i.status.mood)).length
 
@@ -23,9 +23,16 @@ export default function Home({ plants, logs, onOpen }) {
           if (!inZone.length) return null
           return (
             <section key={z.id} aria-labelledby={`zona-${z.id}`}>
-              <h2 id={`zona-${z.id}`} style={{ fontFamily: t.pixelFont, fontSize: 13, color: t.brand, margin: '24px 0 12px' }}>
-                {z.label} <span style={{ fontFamily: t.bodyFont, fontSize: 14, color: t.inkMuted }}>· {inZone.length}</span>
-              </h2>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, margin: '24px 0 12px' }}>
+                <h2 id={`zona-${z.id}`} style={{ fontFamily: t.pixelFont, fontSize: 13, color: t.brand, margin: 0 }}>
+                  {z.label} <span style={{ fontFamily: t.bodyFont, fontSize: 14, color: t.inkMuted }}>· {inZone.length}</span>
+                </h2>
+                {inZone.length > 1 && (
+                  <button onClick={() => onOpenZone(z.id)} style={{ background: 'none', border: 0, padding: 4, color: t.brand, fontWeight: 700, textDecoration: 'underline', cursor: 'pointer', fontSize: 14 }}>
+                    Regar varias
+                  </button>
+                )}
+              </div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))', gap: 10 }}>
                 {inZone.map(({ plant, status }) => <Tile key={plant.id} plant={plant} status={status} onOpen={onOpen} />)}
               </ul>

@@ -1,6 +1,7 @@
 // Ficha provisional de una planta. Se reemplaza por la tarjeta tipo Pokédex cuando Vic apruebe el diseño.
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { logCare } from '../lib/logCare'
+import WhenPicker, { resolveWhen } from './WhenPicker'
 import { MOODS, plantStatus, spriteUrl } from '../lib/mood'
 import { ACTIONS, CONDITIONS, ZONES } from '../lib/zones'
 import { relativeDay, shortDate } from '../lib/dates'
@@ -10,17 +11,17 @@ export default function PlantSheet({ plant, logs, members, onBack, onSaved, demo
   const status = plantStatus(plant, logs)
   const history = logs.filter(l => l.plant_id === plant.id).slice(0, 6)
   const [condition, setCondition] = useState(null)
+  const [when, setWhen] = useState({ kind: 'today' })
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
   const m = t.mood[status.mood]
 
   async function log(action) {
     setBusy(true); setMsg('')
-    if (demoSave) { demoSave({ plant_id: plant.id, action, condition }); setBusy(false); setMsg(`Guardado (demo): ${ACTIONS[action]}.`); setCondition(null); return }
-    const { error } = await supabase.from('care_log').insert({ plant_id: plant.id, action, condition })
+    const { error } = await logCare([{ plant_id: plant.id, action, condition, done_at: resolveWhen(when).toISOString() }], demoSave)
     setBusy(false)
     if (error) { setMsg(`No se guardó: ${error.message}`); return }
-    setMsg(`Guardado: ${ACTIONS[action]}.`); setCondition(null); onSaved()
+    setMsg(`Guardado: ${ACTIONS[action]}.`); setCondition(null); setWhen({ kind: 'today' }); onSaved()
   }
 
   const btn = (primary) => ({ padding: '14px 12px', fontSize: 16, fontWeight: 700, borderRadius: 12, cursor: 'pointer',
@@ -54,12 +55,14 @@ export default function PlantSheet({ plant, logs, members, onBack, onSaved, demo
           {CONDITIONS.map(c => (
             <button key={c.id} aria-pressed={condition === c.id} onClick={() => setCondition(condition === c.id ? null : c.id)}
               style={{ flex: 1, padding: 10, borderRadius: 10, fontWeight: 600, cursor: 'pointer',
-                border: `2px solid ${condition === c.id ? t.brand : t.line}`, background: condition === c.id ? '#e3eee2' : t.surface, color: t.ink }}>
+                border: `2px solid ${condition === c.id ? t.brand : t.line}`, background: condition === c.id ? t.selected : t.surface, color: t.ink }}>
               {c.label}
             </button>
           ))}
         </div>
       </fieldset>
+
+      <WhenPicker when={when} setWhen={setWhen} />
 
       <div style={{ display: 'grid', gap: 10, marginTop: 16 }}>
         <button disabled={busy} onClick={() => log(plant.care_action)} style={btn(true)}>{ACTIONS[plant.care_action]}</button>

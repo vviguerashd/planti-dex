@@ -17,13 +17,18 @@ Misma arquitectura que DuoFit:
 
 **Sin Supabase configurado la app corre en modo demo** (24 plantas y registros inventados en memoria).
 
-Rutas: `/` (zonas) y `/p/P07` (ficha de una planta). La segunda es la que abre cada sticker NFC.
+Rutas: `/` (zonas), `/p/P07` (ficha de una planta) y `/z/jardin` (regar varias de una zona).
+Los stickers NFC abren `/p/…` en plantas de maceta y `/z/…` en zonas que se riegan juntas, como el jardín.
+
+La última lectura se guarda en `localStorage` y se muestra al instante mientras se refresca:
+la primera consulta a Supabase en frío tarda 1–3 s.
 
 ## Puesta en marcha
 
 1. **Supabase:** proyecto nuevo → SQL Editor → correr en orden:
    - `supabase/migrations/001_schema.sql` (tablas, `is_household()`, RLS)
    - `supabase/migrations/002_seed_plants.sql` (las 24 plantas)
+   - `supabase/migrations/003_rls_perf.sql` (mismas políticas, evaluadas una vez por consulta)
 2. **Cuentas:** Authentication → Users → crear los usuarios de Vic y Fer (correo + contraseña).
    Luego desactivar registros nuevos (Authentication → Providers → Email → *Allow new users to sign up*: off).
 3. **Dar acceso a la casa:** en SQL Editor, con los UID de cada usuario:
@@ -57,6 +62,7 @@ regar, o cambiar el agua en esquejes) contra `water_interval_days`: < 0 sedienta
 ## Roadmap
 
 - [x] Zonas, ficha provisional, registro de cuidados, modo demo
+- [x] Pantalla de carga, caché local, elegir fecha del cuidado, regar varias por zona
 - [ ] Tarjeta tipo Pokédex (diseño pendiente de aprobación)
 - [ ] Stickers NFC (cuando la URL de producción sea definitiva)
 - [ ] Avisos cuando una planta tenga sed
