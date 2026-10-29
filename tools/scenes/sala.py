@@ -48,14 +48,14 @@ def scene(state, tv=None):
     d.ellipse([300,98,312,112],fill=hx('#f3b6c4')); d.rectangle([318,102,340,112],fill=hx('#9fc4e0'),outline=hx('#555555'))
     d.rectangle([346,104,356,112],fill=hx('#c9a26b'))
     # ---- sillón en L, TV encima, cuadros, ventana, candil
-    d.rectangle([470,18,540,104],fill=hx('#dfe9f2'))
-    for x in range(472,540,7): d.line([(x,18),(x+2,104)],fill=hx('#c4d0db'))
-    d.rectangle([466,14,540,16],fill=hx('#8c8c8c'))
-    d.rectangle([404,12,470,52],fill=hx('#b99a6a')); d.rectangle([407,15,467,49],fill=hx('#111214'))   # TV
-    if tv is not None: im.alpha_composite(tv.resize((60,34),Image.NEAREST),(407,15))
-    else: tv_wallpaper(d,[407,15,467,49])
-    for lx in range(404,472,7):
-        d.polygon([(lx,12),(lx+3,8),(lx+6,12),(lx+3,15)],fill=hx('#e8722a'))
+    d.rectangle([488,18,540,104],fill=hx('#dfe9f2'))
+    for x in range(490,540,7): d.line([(x,18),(x+2,104)],fill=hx('#c4d0db'))
+    d.rectangle([484,14,540,16],fill=hx('#8c8c8c'))
+    d.rectangle([392,8,482,60],fill=hx('#b99a6a')); d.rectangle([395,11,479,57],fill=hx('#111214'))   # TV
+    if tv is not None: im.alpha_composite(tv,(396,12))
+    else: tv_wallpaper(d,[396,12,478,56])
+    for lx in range(392,484,7):
+        d.polygon([(lx,8),(lx+3,4),(lx+6,8),(lx+3,11)],fill=hx('#e8722a'))
     d.line([(436,0),(436,4)],fill=hx('#c9a24a'))
     for a,b in (((420,6),(452,2)),((424,1),(448,8))): d.line([a,b],fill=hx('#c9a24a'))
     for bx,by in ((418,4),(452,1),(424,0),(448,8)): d.ellipse([bx-2,by-1,bx+2,by+3],fill=hx('#fff4c2'))

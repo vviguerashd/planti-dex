@@ -10,7 +10,14 @@ im=escaleras.base(); hx_,hy_=escaleras.stairs(im); ImageDraw.Draw(im).line([(hx_
 scenes.append(('escaleras','Escaleras',im,{'P05':(14,124),'P02':(92,114),'P01':(hx_-40,hy_+6)},207,(186,160)))
 im=estudio.base(); estudio.chairs(im)
 scenes.append(('estudio','Estudio',im,{'P13':(146,38),'P09':(206,97)},206,(130,159)))
-tv=Image.new('RGBA',(60,34),hx('#9cc8ea')); ImageDraw.Draw(tv).rectangle([0,28,60,34],fill=hx('#7db35a')); tv.alpha_composite(gala_happy(0).resize((28,34)),(16,0))
+import sys
+TVSRC=os.environ.get('TV_IMG') or (R+'tools/scenes/tv_gala.png')
+if not os.path.exists(TVSRC):
+    raise SystemExit('Falta la imagen de la tele: pásala con TV_IMG=/ruta/imagen.png (no se guarda en el repo).')
+src=Image.open(TVSRC).convert('RGB')
+tw,th=82,44; sw,sh=src.size; k=max(tw/sw,th/sh); src=src.resize((round(sw*k),round(sh*k)),Image.LANCZOS)
+l=(src.width-tw)//2; t_=(src.height-th)//2; src=src.crop((l,t_,l+tw,t_+th))
+tv=src.quantize(colors=28,method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGBA')
 scenes.append(('sala','Sala',sala.full(None,tv),{'P06':(-2,121),'P08':(190,121),'P07':(462,121)},216,(300,168)))
 scenes.append(('bufetera','Bufetera',bufetera.scene(None),{'P12':(112,30),'P10':(152,30),'P11':(186,30)},207,(120,160)))
 for sid,label,fn in (('cochera','Cochera',jardin.cochera),('pasillo','Pasillo',jardin.pasillo)):
@@ -22,6 +29,4 @@ for sid,label,im,pos,floor,sleep in scenes:
 json.dump(out,open(R+'src/lib/scenes.json','w'),ensure_ascii=False,indent=1)
 gala_stalk().save(R+'public/gala/acecho.png'); gala_sleep().save(R+'public/gala/dormida.png')
 for i,t in enumerate((-1,0,1)): gala_happy(t).save(R+f'public/gala/feliz{i}.png')
-os.makedirs(R+'tools/scenes',exist_ok=True)
-for f in ('gala.py','common.py','estudio.py','escaleras.py','bufetera.py','sala.py','jardin.py','build.py','caricia.py'): shutil.copy(f,R+'tools/scenes/'+f)
 print([ (o['id'],o['w'],o['h']) for o in out])
