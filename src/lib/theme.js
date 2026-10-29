@@ -9,6 +9,8 @@ export const t = {
   brand: '#1f3a26',       // verde oscuro de cabecera (texto blanco 12.4:1)
   focus: '#1d5fd1',
   selected: '#e3eee2',   // fondo de opción elegida (texto ink 13:1)
+  heart: '#e83448',      // corazones de Gala (decorativos)
+  sceneBg: '#2a2f2b',    // marco oscuro alrededor de los escenarios
   // Chips de ánimo: todos ≥ 7:1 texto/fondo.
   mood: {
     feliz:        { bg: '#dcefd5', ink: '#1e4d22' },

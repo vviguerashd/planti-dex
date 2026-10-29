@@ -1,6 +1,7 @@
 import { ZONES } from '../lib/zones'
 import { MOODS, plantStatus, spriteUrl } from '../lib/mood'
 import { t } from '../lib/theme'
+import Scene from './Scene'
 
 const URGENCY = { sedienta: 0, enferma: 1, con_sed: 2, sin_registro: 3, feliz: 4 }
 
@@ -17,6 +18,7 @@ export default function Home({ plants, logs, onOpen, onOpenZone }) {
         </p>
       </header>
       <main style={{ padding: '8px 16px 40px', maxWidth: 900, margin: '0 auto' }}>
+        <Scene items={items} onOpen={onOpen} />
         {ZONES.map(z => {
           const inZone = items.filter(i => i.plant.zone === z.id)
             .sort((a, b) => URGENCY[a.status.mood] - URGENCY[b.status.mood] || a.plant.id.localeCompare(b.plant.id))

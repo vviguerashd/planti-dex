@@ -16,3 +16,8 @@ Guía para Claude Code en este repo. Ver README para arquitectura y puesta en ma
 
 ## Pendiente de diseño
 La ficha `PlantSheet.jsx` es provisional. Vic quiere ver el arte de la tarjeta tipo Pokédex antes de que se programe.
+
+## Escenarios y Gala
+- Fondos en `public/scenes/{id}.png` (pixel nativo, se muestran a ×2) y posiciones de cada planta en `src/lib/scenes.json`. Se regeneran con `python3 tools/scenes/build.py` (necesita Pillow). Planta nueva = agregarla al `pos` de su escena en el script.
+- Gala (`public/gala/`): al acecho junto a la planta más urgente; solo se deja acariciar cuando ninguna planta está sedienta, con sed o enferma. Las fotos reales de la casa y de Gala NO van al repo.
+- El jardín se divide en Cochera y Pasillo solo a nivel de escena; en la base sigue siendo `zone = 'jardin'`.
