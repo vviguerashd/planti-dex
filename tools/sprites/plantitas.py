@@ -606,7 +606,7 @@ def p09(state, seed=9):
     for y in range(20,58,5): d.line([(38,y),(41,y)], fill=hexc("#6A9450"))
     img.alpha_composite(outline(st,hexc("#2A4A1E")))
     lv=new()
-    specs=[(54,-165,28),(48,-15,28),(42,-150,27),(36,-30,27),(30,-140,24),(24,-45,24),(18,-110,20)]
+    specs=[(54,-165,28),(48,-15,28),(42,-150,27),(36,-30,27),(30,-140,24),(24,-45,22),(21,-105,17)]
     for (y0,a,L) in specs:
         if rng.random()>KEEP[state]: continue
         a2=a+b*((-200 if a<-90 else 20)-a)*0.55
