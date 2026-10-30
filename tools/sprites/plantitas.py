@@ -81,9 +81,7 @@ KEEP={"feliz":1,"con_sed":1,"sedienta":0.72,"enferma":0.95}
 LIGHTPOTHOS = P("#78B84A","#A6D86A","#4E8F33","#2B5A1E","#DDF5A8")
 def p02(state, seed=2):
     rng=random.Random(seed); img=new(); b=BIAS[state]; pal=spal(LIGHTPOTHOS,state)
-    ROCK=P("#C9A08A","#E2C2AE","#9A7462","#5A3E32")
-    r=new(); ImageDraw.Draw(r).polygon([(16,90),(14,80),(20,72),(34,70),(52,71),(62,76),(66,86),(64,90)], fill=ROCK["mid"])
-    r=shade_blob(r, ROCK, (-3,-3), (3,3)); r=outline(r, ROCK["out"]); img.alpha_composite(r)
+    # Ya no va sobre la piedra: cuelga de la escalera de caracol (la piedra ahora es de la begonia).
     ORG=P("#C9663A","#E68A58","#9A4826","#5C2614","#FFC9A6")
     pot_hanging(img, ORG, ORG, top=48, hook_y=10)
     tuft=new()

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import SCENES from '../lib/scenes.json'
 import { MOODS, spriteUrl } from '../lib/mood'
 import { t } from '../lib/theme'
+import { currentSeason } from '../lib/season'
 
 // Escenarios de la casa con Gala.
 // Regla: si alguna planta necesita algo, Gala se pone al acecho junto a la más urgente
@@ -20,6 +21,8 @@ export default function Scene({ items, onOpen }) {
   const scene = SCENES.find(s => s.id === sceneId)
   const byId = useMemo(() => Object.fromEntries(items.map(i => [i.plant.id, i])), [items])
   const scroller = useRef(null)
+  const season = currentSeason()
+  const bgSrc = `/scenes/${scene.id}${season && scene.seasons?.includes(season) ? `_${season}` : ''}.png`
 
   // Gala al acecho: al lado de la planta, mirándola
   let gala = null
@@ -79,7 +82,7 @@ export default function Scene({ items, onOpen }) {
 
       <div ref={scroller} className="scene-scroll" style={{ overflowX: 'auto', borderRadius: 12, border: `3px solid ${t.ink}`, background: t.sceneBg }}>
         <div style={{ position: 'relative', width: scene.w * SCALE, height: scene.h * SCALE }}>
-          <img className="pixel" src={`/scenes/${scene.id}.png`} alt="" width={scene.w * SCALE} height={scene.h * SCALE} style={{ display: 'block' }} />
+          <img className="pixel" src={bgSrc} alt="" width={scene.w * SCALE} height={scene.h * SCALE} style={{ display: 'block' }} />
           {safe && (
             <button onClick={pet} aria-label="Acariciar a Gala"
               style={{ position: 'absolute', left: (petting ? scene.sleep[0] + 10 : scene.sleep[0]) * SCALE, top: (petting ? scene.floor - 80 : scene.sleep[1]) * SCALE, padding: 0, border: 0, background: 'none', cursor: 'pointer', zIndex: 3 }}>
