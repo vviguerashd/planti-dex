@@ -92,8 +92,15 @@ export function buildEmail(risk, plants, force) {
     lines.push(`Correo de prueba: hoy no hay riesgo. Mínima prevista: ${risk.minTemp ?? '—'} °C. Plantas que se avisarían en helada: ${plants.map(p => p.name).join(', ')}.`)
   }
   const subject = `Planti-dex · ${parts.join(' · ')}`
-  const text = lines.join('\n\n') + '\n\nPronóstico: Open-Meteo para Pachuca. planti-dex.vercel.app'
-  const html = `<div style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.5;color:#1c241e">` +
+  // Banners pixel (public/alertas/, generados con tools/alertas/banners.py)
+  const banners = []
+  if (risk.frost) banners.push(['helada', 'Ilustración: las tres bugambilias en una noche helada con copos de nieve y el letrero ¡Helada!'])
+  if (risk.storm) banners.push(risk.storm.hail ? ['granizo', 'Ilustración: las bugambilias bajo nubes negras con granizo y el letrero ¡Granizo!'] : ['tormenta', 'Ilustración: las bugambilias bajo una tormenta con rayo y el letrero Tormenta'])
+  if (!banners.length) banners.push(['prueba', 'Ilustración: las bugambilias felices en un día soleado con el letrero Prueba'])
+  const ascii = risk.frost ? '   *  .  *   ¡HELADA!  *  .  *\n' : risk.storm ? '  ~~~ ⚡ ~~~  ¡TORMENTA! ~~~ ⚡ ~~~\n' : ''
+  const text = ascii + '\n' + lines.join('\n\n') + '\n\nPronóstico: Open-Meteo para Pachuca. planti-dex.vercel.app'
+  const html = `<div style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.5;color:#1c241e;max-width:600px">` +
+    banners.map(([n, alt]) => `<img src="https://planti-dex.vercel.app/alertas/${n}.png" width="600" alt="${alt}" style="display:block;width:100%;max-width:600px;height:auto;border-radius:8px;margin:0 0 12px;image-rendering:pixelated">`).join('') +
     lines.map(l => `<p>${l}</p>`).join('') +
     `<p style="font-size:13px;color:#4a554c">Pronóstico: Open-Meteo para Pachuca. <a href="https://planti-dex.vercel.app">Abrir Planti-dex</a></p></div>`
   return { subject, html, text }
