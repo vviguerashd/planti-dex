@@ -22,3 +22,8 @@ La ficha `PlantSheet.jsx` es provisional. Vic quiere ver el arte de la tarjeta t
 - Temporadas: `src/lib/season.js` decide por fecha local (Halloween/Muertos 15 oct–2 nov). Los adornos de temporada se dibujan solo si `SEASON` coincide; todo lo demás es fijo.
 - Gala (`public/gala/`): al acecho junto a la planta más urgente; solo se deja acariciar cuando ninguna planta está sedienta, con sed o enferma. Las fotos reales de la casa y de Gala NO van al repo.
 - El jardín se divide en Cochera y Pasillo solo a nivel de escena; en la base sigue siendo `zone = 'jardin'`.
+
+## Alertas de clima (`api/alertas.js`)
+- Vercel Cron 1 pm y 6 pm de Pachuca (`0 19 * * *`, `0 0 * * *` en UTC; en Hobby la hora puede variar ±59 min). Solo manda correo si la mínima hasta las 10 am baja a ≤ 4 °C o si hay tormenta (códigos 95/96/99) en 24 h.
+- Pronóstico de Open-Meteo a nivel ciudad. Correo con Resend. Plantas a proteger: `plants.frost_sensitive` (migración 006).
+- Secretos solo en variables de servidor de Vercel: `CRON_SECRET`, `RESEND_API_KEY`, `ALERT_EMAIL`, `SUPABASE_SERVICE_ROLE_KEY`. Nunca con prefijo `VITE_` ni en el repo.
