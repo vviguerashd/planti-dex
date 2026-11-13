@@ -8,11 +8,12 @@ export const ZONES = [
 export const ACTIONS = {
   watered:       'Regué',
   checked_ok:    'Revisé y no necesitaba',
-  water_changed: 'Cambié el agua',
+  water_changed: 'Rellené o cambié el agua',
   transplanted:  'Trasplanté',
   pruned:        'Podé o limpié',
   fertilized:    'Fertilicé',
   photo:         'Foto de seguimiento',
+  rained:        'Se mojó con la lluvia',
 }
 export const CONDITIONS = [
   { id: 'bien', label: 'Bien' },

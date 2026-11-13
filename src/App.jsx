@@ -59,7 +59,11 @@ function Screen({ route, nav, plants, logs, members, onSaved, demoSave }) {
     const inZone = plants.filter(p => p.zone === route.id)
     if (inZone.length) return <ZoneSheet zone={route.id} plants={inZone} {...common} onOpen={id => nav(`/p/${id}`)} />
   }
-  return <Home plants={plants} logs={logs} onOpen={id => nav(`/p/${id}`)} onOpenZone={z => nav(`/z/${z}`)} />
+  if (route.kind === 'rain') {
+    const soil = plants.filter(p => p.care_action === 'watered')
+    return <ZoneSheet mode="rain" plants={soil} {...common} onOpen={id => nav(`/p/${id}`)} />
+  }
+  return <Home plants={plants} logs={logs} onOpen={id => nav(`/p/${id}`)} onOpenZone={z => nav(`/z/${z}`)} onRain={() => nav('/lluvia')} />
 }
 
 function Notice({ children }) {

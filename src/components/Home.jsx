@@ -5,7 +5,7 @@ import Scene from './Scene'
 
 const URGENCY = { sedienta: 0, enferma: 1, con_sed: 2, sin_registro: 3, feliz: 4 }
 
-export default function Home({ plants, logs, onOpen, onOpenZone }) {
+export default function Home({ plants, logs, onOpen, onOpenZone, onRain }) {
   const items = plants.map(p => ({ plant: p, status: plantStatus(p, logs) }))
   const need = items.filter(i => ['sedienta', 'con_sed', 'enferma'].includes(i.status.mood)).length
 
@@ -16,6 +16,9 @@ export default function Home({ plants, logs, onOpen, onOpenZone }) {
         <p style={{ margin: '8px 0 0', fontSize: 15 }}>
           {need === 0 ? 'Todas están bien por ahora.' : `${need} ${need === 1 ? 'planta necesita' : 'plantas necesitan'} atención.`}
         </p>
+        <button onClick={onRain} style={{ marginTop: 12, padding: '8px 14px', fontSize: 14, fontWeight: 700, borderRadius: 999, border: '2px solid #fff', background: 'transparent', color: '#fff', cursor: 'pointer' }}>
+          🌧️ Llovió
+        </button>
       </header>
       <main style={{ padding: '8px 16px 40px', maxWidth: 900, margin: '0 auto' }}>
         <Scene items={items} onOpen={onOpen} />

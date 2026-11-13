@@ -12,7 +12,8 @@ export const MOODS = {
 
 export function plantStatus(plant, logs) {
   const mine = logs.filter(l => l.plant_id === plant.id)          // ya vienen ordenados desc
-  const lastCare = mine.find(l => l.action === plant.care_action) || null
+  // La lluvia (rained) cuenta como riego para las plantas de tierra; no para las que viven en agua.
+  const lastCare = mine.find(l => l.action === plant.care_action || (plant.care_action === 'watered' && l.action === 'rained')) || null
   const lastCondition = mine.find(l => l.condition) || null
   let next = null, daysLeft = null
   if (lastCare) {
