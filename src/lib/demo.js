@@ -16,4 +16,13 @@ export const demo = {
   plants,
   logs: seed.map(([plant_id, action, d, by, condition], i) => ({ id: 'd' + i, plant_id, action, done_at: daysAgo(d), done_by: by, condition, note: null })),
   members: { [VIC]: 'Vic', [FER]: 'Fer' },
+  bins: [
+    { id: 'L1', name: 'Depósito 1 · cubetas', notes: 'Dos cubetas de 19 L apiladas: arriba tierra y lombrices, abajo junta el líquido.' },
+    { id: 'L2', name: 'Depósito 2 · talavera', notes: 'Maceta de talavera con girasoles sobre base de fierro.' },
+  ],
+  compostLogs: [
+    { id: 'c1', bin_id: 'L1', action: 'feed', done_at: daysAgo(8), done_by: VIC, note: null },
+    { id: 'c2', bin_id: 'L2', action: 'feed', done_at: daysAgo(3), done_by: VIC, note: null },
+    { id: 'c3', bin_id: 'L2', action: 'moisture_ok', done_at: daysAgo(3), done_by: VIC, note: null },
+  ],
 }

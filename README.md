@@ -36,6 +36,7 @@ la primera consulta a Supabase en frío tarda 1–3 s.
    - `supabase/migrations/004_bambus_cempasuchil.sql` (tres bambús P15/P25/P26 y segundo cempasúchil P27)
    - `supabase/migrations/005_lluvia_y_agua.sql` (acción `rained`; esquejes en agua cada 30 días)
    - `supabase/migrations/006_sensibles_al_frio.sql` (`frost_sensitive`: las tres bugambilias)
+   - `supabase/migrations/007_lombricomposta.sql` (depósitos L1 y L2 y su registro)
 2. **Cuentas:** Authentication → Users → crear los usuarios de Vic y Fer (correo + contraseña).
    Luego desactivar registros nuevos (Authentication → Providers → Email → *Allow new users to sign up*: off).
 3. **Dar acceso a la casa:** en SQL Editor, con los UID de cada usuario:
@@ -97,6 +98,6 @@ Pronóstico de Open-Meteo a nivel ciudad; correo por Resend con banner pixel (`p
 - [x] Lluvia, esquejes en agua cada mes, alertas de helada y tormenta por correo
 - [ ] Resumen diario de riegos (solo cuando haya pendientes)
 - [ ] Propagación: esquejes que "nacen" y heredan linaje (`parent_id`)
-- [ ] Lombricomposta: depósitos 1 y 2, mantenimiento y cosecha
+- [x] Lombricomposta: depósitos 1 y 2, rutina del sábado, humedad y cosecha (Gala avisa en el patio trasero)
 - [ ] Más temporadas (Navidad, amor y amistad, patrias); redibujar sillones de la sala y a Gala
 - [ ] Sensores de humedad

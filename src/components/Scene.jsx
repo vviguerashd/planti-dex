@@ -3,6 +3,7 @@ import SCENES from '../lib/scenes.json'
 import { MOODS, spriteUrl } from '../lib/mood'
 import { t } from '../lib/theme'
 import { currentSeason } from '../lib/season'
+import { COMPOST_MOOD_LABEL } from '../lib/compost'
 
 // Escenarios de la casa con Gala.
 // Regla: si alguna planta necesita algo, Gala se pone al acecho junto a la más urgente
@@ -28,8 +29,9 @@ export default function Scene({ items, onOpen }) {
   let gala = null
   if (!safe && target && scene.plants[target.plant.id]) {
     const [px] = scene.plants[target.plant.id]
-    const right = px + 40 < scene.w / 2
-    const left = Math.max(0, Math.min(scene.w - 86, right ? px + 66 : px - 72))
+    const pw = scene.hotspots?.[target.plant.id]?.[0] ?? 80
+    const right = px + pw / 2 < scene.w / 2
+    const left = Math.max(0, Math.min(scene.w - 86, right ? px + pw - 14 : px - 72))
     gala = { left, top: scene.floor - 54, flip: !right }
   }
 
@@ -57,10 +59,11 @@ export default function Scene({ items, onOpen }) {
 
   const targetScene = target && sceneOf(target.plant.id)
   const name = p => p.nickname || p.name
+  const moodText = it => it.plant.compost ? COMPOST_MOOD_LABEL[it.status.mood].toLowerCase() : MOODS[it.status.mood].label.toLowerCase()
   let message
   if (safe) message = petting ? 'A Gala le encantó.' : 'Todas las plantas están a salvo. Gala se echó a dormir: ya la puedes acariciar.'
   else if (!target) message = `${urgent.length} ${urgent.length === 1 ? 'planta necesita' : 'plantas necesitan'} atención. Gala no se deja acariciar hasta que estén a salvo.`
-  else if (targetScene.id === sceneId) message = `Gala encontró algo: ${name(target.plant)} está ${MOODS[target.status.mood].label.toLowerCase()}.`
+  else if (targetScene.id === sceneId) message = target.plant.compost ? `Gala encontró algo: las lombrices del ${name(target.plant).split(' ·')[0].toLowerCase()} tienen hambre.` : `Gala encontró algo: ${name(target.plant)} está ${moodText(target)}.`
   else message = `Gala está en ${targetScene.label.toLowerCase()}, junto a ${name(target.plant)}.`
   const tone = safe ? t.mood.feliz : t.mood[target?.status.mood || 'con_sed']
 
@@ -96,6 +99,11 @@ export default function Scene({ items, onOpen }) {
           ))}
           {Object.entries(scene.plants).map(([id, [x, y]]) => {
             const it = byId[id]; if (!it) return null
+            if (it.plant.compost) {
+              const [w, h] = scene.hotspots?.[id] || [80, 96]
+              return <button key={id} onClick={() => onOpen(id)} aria-label={`${name(it.plant)}: ${COMPOST_MOOD_LABEL[it.status.mood]}`}
+                style={{ position: 'absolute', left: x * SCALE, top: y * SCALE, width: w * SCALE, height: h * SCALE, padding: 0, border: 0, background: 'none', cursor: 'pointer', zIndex: 2 }} />
+            }
             return (
               <button key={id} onClick={() => onOpen(id)} aria-label={`${name(it.plant)}: ${MOODS[it.status.mood].label}`}
                 style={{ position: 'absolute', left: x * SCALE, top: y * SCALE, width: 80 * SCALE, height: 96 * SCALE, padding: 0, border: 0, background: 'none', cursor: 'pointer', zIndex: 2 }}>

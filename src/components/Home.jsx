@@ -2,11 +2,13 @@ import { ZONES } from '../lib/zones'
 import { MOODS, plantStatus, spriteUrl } from '../lib/mood'
 import { t } from '../lib/theme'
 import Scene from './Scene'
+import { compostStatus, COMPOST_MOOD_LABEL } from '../lib/compost'
 
 const URGENCY = { sedienta: 0, enferma: 1, con_sed: 2, sin_registro: 3, feliz: 4 }
 
-export default function Home({ plants, logs, onOpen, onOpenZone, onRain }) {
+export default function Home({ plants, logs, bins = [], compostLogs = [], onOpen, onOpenZone, onRain }) {
   const items = plants.map(p => ({ plant: p, status: plantStatus(p, logs) }))
+  const compost = bins.map(b => ({ plant: { ...b, compost: true }, status: compostStatus(b, compostLogs) }))
   const need = items.filter(i => ['sedienta', 'con_sed', 'enferma'].includes(i.status.mood)).length
 
   return (
@@ -21,7 +23,7 @@ export default function Home({ plants, logs, onOpen, onOpenZone, onRain }) {
         </button>
       </header>
       <main style={{ padding: '8px 16px 40px', maxWidth: 900, margin: '0 auto' }}>
-        <Scene items={items} onOpen={onOpen} />
+        <Scene items={[...items, ...compost]} onOpen={onOpen} />
         {ZONES.map(z => {
           const inZone = items.filter(i => i.plant.zone === z.id)
             .sort((a, b) => URGENCY[a.status.mood] - URGENCY[b.status.mood] || a.plant.id.localeCompare(b.plant.id))
@@ -44,6 +46,27 @@ export default function Home({ plants, logs, onOpen, onOpenZone, onRain }) {
             </section>
           )
         })}
+        {compost.length > 0 && (
+          <section aria-labelledby="zona-lombri">
+            <h2 id="zona-lombri" style={{ fontFamily: t.pixelFont, fontSize: 13, color: t.brand, margin: '24px 0 12px' }}>
+              Lombricomposta <span style={{ fontFamily: t.bodyFont, fontSize: 14, color: t.inkMuted }}>· patio trasero</span>
+            </h2>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
+              {compost.map(({ plant: bin, status }) => {
+                const m = t.mood[status.mood]
+                return (
+                  <li key={bin.id}>
+                    <button onClick={() => onOpen(bin.id)} style={{ width: '100%', border: `2px solid ${t.line}`, borderRadius: 12, background: t.surface, padding: '12px 10px', cursor: 'pointer', color: t.ink, textAlign: 'left' }}>
+                      <span style={{ display: 'block', fontSize: 14, fontWeight: 700 }}>{bin.name}</span>
+                      <span style={{ display: 'inline-block', marginTop: 8, fontSize: 12, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: m.bg, color: m.ink }}>{COMPOST_MOOD_LABEL[status.mood]}</span>
+                      {status.harvestDue && <span style={{ display: 'block', marginTop: 6, fontSize: 12, color: t.inkMuted }}>Toca revisar cosecha</span>}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
       </main>
     </>
   )

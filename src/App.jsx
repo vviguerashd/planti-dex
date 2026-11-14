@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Home from './components/Home'
 import PlantSheet from './components/PlantSheet'
 import ZoneSheet from './components/ZoneSheet'
+import CompostSheet from './components/CompostSheet'
 import Loading from './components/Loading'
 import { t } from './lib/theme'
 import { demo } from './lib/demo'
@@ -19,14 +20,18 @@ export default function App() {
   const [route, setRoute] = useState(parseRoute())
 
   const load = useCallback(async () => {
-    const [p, l, m] = await Promise.all([
+    const [p, l, m, b, c] = await Promise.all([
       supabase.from('plants').select('*').eq('active', true).order('id'),
       supabase.from('care_log').select('*').order('done_at', { ascending: false }).limit(2000),
       supabase.from('household_members').select('*'),
+      supabase.from('compost_bins').select('*').eq('active', true).order('id'),
+      supabase.from('compost_log').select('*').order('done_at', { ascending: false }).limit(500),
     ])
     const err = p.error || l.error || m.error
     if (err) { setError(err.message); return }
-    const fresh = { plants: p.data, logs: l.data, members: Object.fromEntries(m.data.map(x => [x.user_id, x.display_name])) }
+    // Si la migración 007 aún no corre, la app sigue funcionando sin lombricomposta.
+    const fresh = { plants: p.data, logs: l.data, members: Object.fromEntries(m.data.map(x => [x.user_id, x.display_name])),
+      bins: b.error ? [] : b.data, compostLogs: c.error ? [] : c.data }
     setData(fresh); writeCache(fresh); setError(null)
   }, [])
 
@@ -49,8 +54,13 @@ export default function App() {
   return <Screen route={route} nav={nav} {...data} onSaved={load} />
 }
 
-function Screen({ route, nav, plants, logs, members, onSaved, demoSave }) {
+function Screen({ route, nav, plants, logs, members, bins = [], compostLogs = [], onSaved, demoSave }) {
   const common = { logs, members, onSaved, demoSave, onBack: () => nav('/') }
+  const open = id => nav(id.startsWith('L') ? `/l/${id}` : `/p/${id}`)
+  if (route.kind === 'compost') {
+    const bin = bins.find(b => b.id === route.id)
+    if (bin) return <CompostSheet bin={bin} compostLogs={compostLogs} {...common} />
+  }
   if (route.kind === 'plant') {
     const plant = plants.find(p => p.id === route.id)
     if (plant) return <PlantSheet plant={plant} {...common} />
@@ -63,7 +73,7 @@ function Screen({ route, nav, plants, logs, members, onSaved, demoSave }) {
     const soil = plants.filter(p => p.care_action === 'watered')
     return <ZoneSheet mode="rain" plants={soil} {...common} onOpen={id => nav(`/p/${id}`)} />
   }
-  return <Home plants={plants} logs={logs} onOpen={id => nav(`/p/${id}`)} onOpenZone={z => nav(`/z/${z}`)} onRain={() => nav('/lluvia')} />
+  return <Home plants={plants} logs={logs} bins={bins} compostLogs={compostLogs} onOpen={open} onOpenZone={z => nav(`/z/${z}`)} onRain={() => nav('/lluvia')} />
 }
 
 function Notice({ children }) {
@@ -73,11 +83,12 @@ function Notice({ children }) {
 // Sin Supabase: mismas pantallas con datos de ejemplo en memoria.
 function Demo({ route, nav }) {
   const [logs, setLogs] = useState(demo.logs)
-  const demoSave = entries => setLogs(l => [...entries.map((e, i) => ({ id: 'n' + l.length + i, done_by: 'demo-vic', note: null, ...e })), ...l])
+  const [compostLogs, setCompostLogs] = useState(demo.compostLogs)
+  const demoSave = (entries, kind) => (kind === 'compost' ? setCompostLogs : setLogs)(l => [...entries.map((e, i) => ({ id: 'n' + l.length + i, done_by: 'demo-vic', note: null, ...e })), ...l])
   return (
     <>
       <p style={{ margin: 0, padding: '6px 16px', background: '#fdebb3', color: '#5c3d00', fontSize: 13, fontWeight: 600 }}>Modo demo: datos de ejemplo, nada se guarda.</p>
-      <Screen route={route} nav={nav} plants={demo.plants} logs={logs} members={demo.members} onSaved={() => {}} demoSave={demoSave} />
+      <Screen route={route} nav={nav} plants={demo.plants} logs={logs} members={demo.members} bins={demo.bins} compostLogs={compostLogs} onSaved={() => {}} demoSave={demoSave} />
     </>
   )
 }

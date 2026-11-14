@@ -27,3 +27,7 @@ La ficha `PlantSheet.jsx` es provisional. Vic quiere ver el arte de la tarjeta t
 - Vercel Cron 1 pm y 6 pm de Pachuca (`0 19 * * *`, `0 0 * * *` en UTC; en Hobby la hora puede variar ±59 min). Solo manda correo si la mínima hasta las 10 am baja a ≤ 4 °C o si hay tormenta (códigos 95/96/99) en 24 h.
 - Pronóstico de Open-Meteo a nivel ciudad. Correo con Resend. Plantas a proteger: `plants.frost_sensitive` (migración 006).
 - Secretos solo en variables de servidor de Vercel: `CRON_SECRET`, `RESEND_API_KEY`, `ALERT_EMAIL`, `SUPABASE_SERVICE_ROLE_KEY`. Nunca con prefijo `VITE_` ni en el repo.
+
+## Lombricomposta
+- Tablas `compost_bins` (L1 cubetas, L2 talavera) y `compost_log` (migración 007, con RLS). Ruta `/l/L1`. Lógica en `src/lib/compost.js`: hambre a los 7 días sin `feed`, aviso de cosecha a los 90 días.
+- Sin correos: Gala se pone al acecho en la escena `patio` (Patio trasero) cuando hay hambre. Los depósitos son zonas tocables (`hotspots` en `scenes.json`), no sprites.

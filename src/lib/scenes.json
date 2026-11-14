@@ -202,5 +202,37 @@
   "seasons": [
    "halloween"
   ]
+ },
+ {
+  "id": "patio",
+  "label": "Patio trasero",
+  "w": 360,
+  "h": 210,
+  "floor": 206,
+  "sleep": [
+   140,
+   160
+  ],
+  "plants": {
+   "L1": [
+    30,
+    62
+   ],
+   "L2": [
+    112,
+    86
+   ]
+  },
+  "seasons": [],
+  "hotspots": {
+   "L1": [
+    78,
+    138
+   ],
+   "L2": [
+    106,
+    112
+   ]
+  }
  }
 ]
