@@ -5,6 +5,7 @@ import WhenPicker, { resolveWhen } from './WhenPicker'
 import { COMPOST_ACTIONS, COMPOST_MOOD_LABEL, compostStatus, HARVEST_DAYS } from '../lib/compost'
 import { relativeDay, shortDate } from '../lib/dates'
 import { t } from '../lib/theme'
+import CompostTips from './CompostTips'
 
 export default function CompostSheet({ bin, compostLogs, members, onBack, onSaved, demoSave }) {
   const s = compostStatus(bin, compostLogs)
@@ -48,6 +49,8 @@ export default function CompostSheet({ bin, compostLogs, members, onBack, onSave
           Ya pasaron más de {Math.round(HARVEST_DAYS / 30)} meses desde la última cosecha. Si casi todo es tierra negra y ya no reconoces la comida, toca cosechar.
         </p>
       )}
+
+      <CompostTips />
 
       <h2 style={sub}>Rutina del sábado</h2>
       <ol style={{ margin: 0, paddingLeft: 20, lineHeight: 1.5, color: t.ink }}>

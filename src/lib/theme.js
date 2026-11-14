@@ -11,6 +11,8 @@ export const t = {
   selected: '#e3eee2',   // fondo de opción elegida (texto ink 13:1)
   heart: '#e83448',      // corazones de Gala (decorativos)
   sceneBg: '#2a2f2b',    // marco oscuro alrededor de los escenarios
+  // Dibujitos de los tips de lombricomposta (decorativos)
+  compost: { soil: '#3b2f27', bed: '#c8a46a', food: '#6f9a3a', worm: '#c95a74', water: '#7fb3d9', line: '#8fa3ad', sun: '#f2c94c' },
   // Chips de ánimo: todos ≥ 7:1 texto/fondo.
   mood: {
     feliz:        { bg: '#dcefd5', ink: '#1e4d22' },
